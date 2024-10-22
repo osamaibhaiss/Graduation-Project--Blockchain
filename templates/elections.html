@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Elections</title>
+    <style>
+        /* Add basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin-left: 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #575757;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+        ul.elections-list {
+            list-style: none;
+            padding: 0;
+            width: 80%;
+            margin: 0 auto;
+        }
+        ul.elections-list li {
+            background-color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        ul.elections-list li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">User Panel</div>
+        <ul>
+            <li><a href="{% url 'voting:elections' %}">Elections</a></li>
+            <li><a href="{% url 'accounts:profile_edit' %}">Profile</a></li>
+            {% if user.is_authenticated %}
+                <li>
+                    <form method="POST" action="{% url 'accounts:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" style="background: none; border: none; color: white; cursor: pointer;">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+            {% else %}
+                <li><a href="{% url 'accounts:login' %}">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Content -->
+    <div class="content">
+        <h1>Available Elections</h1>
+        <ul class="elections-list">
+            {% for election in elections %}
+                <li>
+                    <a href="{% url 'voting:vote' election_id=election.election_id %}">{{ election.election_name }}</a>
+                    <a href="{% url 'voting:results' election_id=election.election_id %}">Results</a>
+                </li>
+            {% empty %}
+                <li>No elections available.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Voting System</p>
+    </footer>
+
+</body>
+</html>

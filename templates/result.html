@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .results-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+        text-align: center;
+        color: #333;
+        font-family: 'Arial', sans-serif;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        font-size: 1.1em;
+        padding: 10px;
+        background-color: #f0f0f0;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .vote-highlight {
+        color: green;
+        font-weight: bold;
+    }
+
+    .back-to-elections {
+        display: block;
+        margin: 20px auto;
+        text-align: center;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .back-to-elections:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="results-container">
+    <h1>Results for Election: {{ election.election_name }}</h1>
+
+    <h2>Group Results</h2>
+    <ul>
+    {% for group in groups %}
+        <li>
+            {{ group.group_name }}: {{ group.total_votes }} votes
+            {% if user_vote and user_vote.group == group %}
+                <span class="vote-highlight">(Your Vote)</span>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No groups found for this election.</li>
+    {% endfor %}
+</ul>
+
+    
+
+    <a href="{% url 'voting:elections' %}" class="back-to-elections">Back to Elections</a>
+</div>
+{% endblock %}
+

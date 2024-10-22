@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href=" {% static "main/profile.css" %} ">
+    <style>
+       
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <h3>{{ profile }}</h3>
+            <h3>{{ profile.user }}</h3>
+        </div>
+        <div class="profile-info">
+            <!-- Additional profile information can be added here -->
+            <p>Email: {{ profile.user.email }}</p>
+            <p>Joined: {{ profile.user.date_joined }}</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* General container styles */
+    .vote-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Title styling */
+    .vote-title {
+        text-align: center;
+        color: #333;
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Form styling */
+    .vote-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Label styling */
+    .vote-label {
+        font-size: 1.1em;
+        color: #555;
+    }
+
+    /* Select box styling */
+    .vote-select {
+        padding: 10px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    /* Button styling */
+    .vote-button {
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .vote-button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="vote-container">
+    <h1 class="vote-title">Vote for {{ election.election_name }}</h1>
+    <form method="post" class="vote-form">
+        {% csrf_token %}
+        <label for="group" class="vote-label">Select a group:</label>
+        <select name="group" id="group" class="vote-select">
+            {% for group in groups %}
+                <option value="{{ group.group_id }}">{{ group.group_name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="vote-button">Vote</button>
+    </form>
+</div>
+{% endblock %}

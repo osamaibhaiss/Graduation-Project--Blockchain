@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting System</title>
+    <link rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="logo">Logo</div>
+        <ul>
+            <li><a href="{% url 'voting:elections' %}">Elections</a></li>
+            {% if election %}
+                <li><a href="{% url 'voting:vote' election_id=election.election_id %}">Vote</a></li>
+                <li><a href="{% url 'voting:results' election_id=election.election_id %}">Results</a></li>
+            {% else %}
+                <li><a href="#" onclick="alert('Please select an election to vote.'); return false;">Vote</a></li>
+                <li><a href="#" onclick="alert('Please select an election to view results.'); return false;">Results</a></li>
+            {% endif %}
+            <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
+            <li><a href="{% url 'accounts:login' %}">Login</a></li>
+        </ul>
+    </nav>
+    
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Voting System</p>
+    </footer>
+</body>
+</html>

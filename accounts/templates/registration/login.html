@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static "login/login.css" %}">
+    <style>
+       
+    </style>
+</head>
+<body>
+    <div class="login-container">
+
+       <div class="login-home">
+        <img src="{%static 'images/login.png'%}" alt="" class="login-image">
+        <h2>Login</h2>
+
+        {% if form.errors %}
+            <p class="error-message">Your username and password didn't match. Please try again.</p>
+        {% endif %}
+
+        {% if next %}
+            {% if user.is_authenticated %}
+                <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+            {% else %}
+                <p>Please login to see this page.</p>
+            {% endif %}
+        {% endif %}
+
+        <form method="post" method="post" action="{% url 'accounts:login' %}?next={% url 'voting:elections' %} class="login-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="login-button" style="border-radius: 32px">Login</button>
+
+            <input type="hidden" name="next" value="{{ next }}" >
+        </form>
+
+        <p class="password-reset"><a href="{% url 'password_reset' %}">Lost password?</a></p>
+    </div> </div>
+</body>
+</html>

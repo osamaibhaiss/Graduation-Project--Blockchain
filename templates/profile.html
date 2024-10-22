@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Your Profile</h1>
+    <p>Username: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Full Name: {{ user.get_full_name }}</p>
+    <p>Phone: {{ user.profile.voter.phone_number }}</p>
+    <p>Second Name: {{ user.profile.voter.second_name }}</p>
+    <p>Third Name: {{ user.profile.voter.third_name }}</p>
+    <p>Identity Card Number: {{ user.profile.voter.identity_card_number }}</p>
+    <p>Date of Birth: {{ user.profile.voter.date_of_birth }}</p>
+    <p>Address: {{ user.profile.voter.address }}</p>
+    <p>Phone: {{ user.profile.phone_number }}</p>
+{% endblock %}
+
+    
+    
+

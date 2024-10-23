@@ -60,21 +60,18 @@
 
     <h2>Group Results</h2>
     <ul>
-    {% for group in groups %}
+    {% for group_data in groups %}
         <li>
-            {{ group.group_name }}: {{ group.total_votes }} votes
-            {% if user_vote and user_vote.group == group %}
+            {{ group_data.group.group_name }}: {{ group_data.vote_count }} votes
+            {% if user_vote and user_vote.group == group_data.group %}
                 <span class="vote-highlight">(Your Vote)</span>
             {% endif %}
         </li>
     {% empty %}
         <li>No groups found for this election.</li>
     {% endfor %}
-</ul>
-
-    
+    </ul>
 
     <a href="{% url 'voting:elections' %}" class="back-to-elections">Back to Elections</a>
 </div>
 {% endblock %}
-

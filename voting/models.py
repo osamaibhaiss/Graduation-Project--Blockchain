@@ -3,6 +3,13 @@ from django.contrib.auth.hashers import make_password
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from accounts.models import Profile  # Ensure this line is present
+import random
+import string
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
 
 class Voter(models.Model):
     identity_card_number = models.CharField(max_length=20, unique=True)
@@ -14,9 +21,62 @@ class Voter(models.Model):
     date_of_birth = models.DateField()
     address = models.TextField()
     has_voted = models.BooleanField(default=False)
+    
+    # One-to-one link to the User model
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='voter')
+    
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name}{self.user.username}"
+
+    @staticmethod
+    def generate_random_string(length=8):
+        """Generate a random string of a given length."""
+        return ''.join(random.choices(string.ascii_lowercase + string.digits, k=length))
+@receiver(post_save, sender=Voter)
+def create_user_and_profile(sender, instance, created, **kwargs):
+    if created:
+        # Generate a random username and password for the new voter
+        username = f"voter_{Voter.generate_random_string()}"
+        raw_password = Voter.generate_random_string()
+
+        # Create a User for the voter
+        user = User.objects.create_user(
+            username=username,
+            email=f"{username}@example.com",  # Placeholder email
+            password=raw_password
+        )
+
+        # Store the raw password in the voter instance
+        instance.raw_password = raw_password
+        instance.save()
+
+        # Create or update the Profile for the voter
+        profile, created = Profile.objects.get_or_create(
+            user=user,  # Ensure we don't duplicate the profile for the same user
+            defaults={
+                'phone_number': instance.phone_number,
+                'address': instance.address,
+                'second_name': instance.second_name,
+                'third_name': instance.third_name,
+                'identity_card_number': instance.identity_card_number,
+                'date_of_birth': instance.date_of_birth
+            }
+        )
+
+        if created:
+            print(f"Profile created for voter {instance.first_name} {instance.last_name} with username: {username}")
+        else:
+            print(f"Profile already exists for user {username}")
+    else:
+        # If the Voter is updated, ensure the Profile is updated too
+        if hasattr(instance, 'user') and instance.user.profile:
+            instance.user.profile.phone_number = instance.phone_number
+            instance.user.profile.address = instance.address
+            instance.user.profile.second_name = instance.second_name
+            instance.user.profile.third_name = instance.third_name
+            instance.user.profile.save()
+
 
 class Login(models.Model):
     voter = models.OneToOneField(Voter, on_delete=models.CASCADE)

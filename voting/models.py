@@ -5,10 +5,7 @@ from django.dispatch import receiver
 from accounts.models import Profile  # Ensure this line is present
 import random
 import string
-from django.db import models
-from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.contrib.auth.models import User
 
 class Voter(models.Model):

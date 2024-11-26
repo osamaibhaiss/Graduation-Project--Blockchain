@@ -130,3 +130,6 @@ STATICFILES_DIRS = [
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'voting:elections'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CONTRACT_ABI = '[...]'  # Paste the ABI JSON here (compiled from the deploy script)
+CONTRACT_ADDRESS = '0x...'  # Replace with the contract address from Ganache

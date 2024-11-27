@@ -2,22 +2,22 @@ from web3 import Web3
 from solcx import compile_standard, install_solc
 import json
 import os
-
+from solcx import install_solc
 # Install Solidity compiler
 install_solc('0.8.0')
+install_solc('0.8.19')
+# Besu Local RPC URL (Free gas network URL)
+BESU_URL = "http://127.0.0.1:8545"  # Change this to your Besu node URL if different
 
-# Ganache Local RPC URL
-GANACHE_URL = "http://127.0.0.1:7545"  # Local Ganache instance URL
-
-# Connect to the Ganache local blockchain
-w3 = Web3(Web3.HTTPProvider(GANACHE_URL))
+# Connect to the Besu free gas network
+w3 = Web3(Web3.HTTPProvider(BESU_URL))
 
 # Check connection
 if not w3.is_connected():
-    print("Failed to connect to Ganache. Ensure the URL is correct and Ganache is running.")
+    print("Failed to connect to Besu. Ensure the URL is correct and the Besu node is running.")
     exit()
 
-print(f"Connected to Ganache at {GANACHE_URL}")
+print(f"Connected to Besu at {BESU_URL}")
 
 # Load and compile the Solidity contract
 CONTRACT_PATH = 'contracts/Voting.sol'
@@ -53,9 +53,9 @@ print("Contract compiled successfully!")
 print(f"Contract Bytecode (first 50 chars): {bytecode[:50]}...")
 print(f"Contract ABI: {abi[:2]}...")
 
-# Ganache account details
-account = "0x2DFBde5603b82fb8196EBdFa6A8675616236576a"  # Replace with your Ganache account address
-private_key = "0x5a0efc86deb424d1821269c812d7b120ab156d90b235cb27c1183fc4e58bd6bc"  # Replace with your Ganache account private key
+# Besu account details (make sure this account is unlocked on Besu node)
+account = "0x2DFBde5603b82fb8196EBdFa6A8675616236576a"  # Replace with your Besu account address
+private_key = "0x5a0efc86deb424d1821269c812d7b120ab156d90b235cb27c1183fc4e58bd6bc"  # Replace with your Besu account private key
 
 # Build the contract instance
 VotingSystem = w3.eth.contract(abi=abi, bytecode=bytecode)
@@ -63,10 +63,10 @@ VotingSystem = w3.eth.contract(abi=abi, bytecode=bytecode)
 # Build the transaction for deploying the contract
 transaction = VotingSystem.constructor().build_transaction({
     'from': account,
-    'gas': 1200000000,  # Increased gas limit
-    'gasPrice': w3.to_wei('20', 'gwei'),  # Adjust gas price if needed, Ganache often uses low gas prices
+    'gas': 12000000,  # Ensure enough gas for deployment (based on Besu settings)
+    'gasPrice': 0,    # Zero gas price for free gas network
     'nonce': w3.eth.get_transaction_count(account),
-    'value': 0
+    'value': 0        # No ether sent with the transaction
 })
 
 # Sign the transaction

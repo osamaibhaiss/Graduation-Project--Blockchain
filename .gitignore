@@ -1,2 +1,4 @@
 venv/
 nexto/
+config.bat
+node_modules

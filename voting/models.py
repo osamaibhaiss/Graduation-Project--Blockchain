@@ -20,7 +20,7 @@ class Voter(models.Model):
     has_voted = models.BooleanField(default=False)
     
     # One-to-one link to the User model
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='voter')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, default=1)
     
 
     def __str__(self):
